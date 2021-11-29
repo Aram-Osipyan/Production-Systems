@@ -36,7 +36,10 @@ namespace ConsoleApp
         {
             return RuleID == (obj as Rule)?.RuleID;
         }
+        public override string ToString()
+        {
+            return Text;
+        }
 
-      
     }
 }

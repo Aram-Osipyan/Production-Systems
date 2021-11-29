@@ -5,6 +5,23 @@ using System.Linq;
 
 namespace ConsoleApp
 {
+    public static class ExtensionMethod
+    {
+        public static void Add<T>(this HashSet<T> set,IEnumerable<T> list)
+        {
+            foreach (var item in list)
+            {
+                set.Add(item);
+            }
+        }
+        public static void Enqueue<T>(this Queue<T> set, IEnumerable<T> list)
+        {
+            foreach (var item in list)
+            {
+                set.Enqueue(item);
+            }
+        }
+    }
     class KnowledgeBase
     {
         public Dictionary<string,Fact> Facts
@@ -17,7 +34,7 @@ namespace ConsoleApp
             get;
             private set;
         }
-        public Dictionary<Fact, Rule> ReverseRules
+        public Dictionary<Fact, List<Rule>> ReverseRules
         {
             get;
             private set;
@@ -28,7 +45,7 @@ namespace ConsoleApp
         {
             Facts = new Dictionary<string, Fact>();
             Rules = new List<Rule>();
-            ReverseRules = new Dictionary<Fact, Rule>();
+            ReverseRules = new Dictionary<Fact, List<Rule>>();
         }
         public void FactsFileParse(string filename)
         {
@@ -65,7 +82,15 @@ namespace ConsoleApp
                 Fact rfact = Facts[splitted[2]];
                 Rule rule = new Rule(splitted[0], lfacts, rfact, splitted[3]);
                 Rules.Add(rule);
-                ReverseRules[rfact]= rule;
+                if (ReverseRules.ContainsKey(rfact))
+                {
+                    ReverseRules[rfact].Add(rule);
+                }
+                else
+                {
+                    ReverseRules[rfact] = new List<Rule>();
+                }
+                
                 i++;
             }
         }
